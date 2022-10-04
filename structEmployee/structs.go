@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 type employee struct{
 	name string
@@ -26,20 +29,36 @@ func (e *employee)changeName(name string) {
 	e.name = name
 }
 
+type storage interface {
+	insert(e employee) error
+	get(id int) (employee, error)
+	delete(id int) error
+}
+
+
+
 func main() {
 	
-	employee1 := employee{
-		name: "Vasya",
-		sex: "Male",
-		age: 25,
-		salary: 2,
-	}
+	employee1 := newEmployee("Vasya","Male",25,2)
 
 	employee2 := newEmployee("Vera", "Female", 24, 4)
+
+	var res uint8
+
+	go count(&res)
 
 	fmt.Printf("%s \n", employee1.employeeToString())
 	employee2.changeName("Oleg")
 	fmt.Printf("%s \n", employee2.employeeToString())
 
+	fmt.Printf("result = %d", res)
 
+
+}
+
+func count(in *uint8) {
+	time.Sleep(10)
+	fmt.Println("Begin counting")
+	*in = 2
+	*in += 4
 }
